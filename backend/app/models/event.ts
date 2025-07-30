@@ -18,7 +18,10 @@ export default class Event extends BaseModel {
   declare location: string
 
   @column()
-  declare maxCount: number
+  declare maxGuest: number
+
+  @column()
+  declare guestCount: number
 
   @column()
   declare username: string

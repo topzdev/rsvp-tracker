@@ -14,17 +14,18 @@ const EventsController = () => import('#controllers/events_controller')
 // Events routes
 router
   .group(() => {
+    // grouping /events routes with auth middleware
     router
       .group(() => {
+        router.get('user', [EventsController, 'userEvents'])
+        router.get(':id', [EventsController, 'show'])
         router.post('', [EventsController, 'store'])
-        router.get('/:id', [EventsController, 'show'])
-        router.put('/:id', [EventsController, 'update'])
-        router.delete('/:id', [EventsController, 'destroy'])
-        router.put('/:id/increase', [EventsController, 'increaseMaxCount'])
-        router.get('/user', [EventsController, 'userEvents'])
+        router.put(':id', [EventsController, 'update'])
+        router.delete(':id', [EventsController, 'destroy'])
+        router.put(':id/increase', [EventsController, 'increaseGuestCount'])
       })
       .prefix('events')
       .use(middleware.auth())
-    router.get('/events', [EventsController, 'index'])
+    router.get('events', [EventsController, 'index'])
   })
   .prefix('api')

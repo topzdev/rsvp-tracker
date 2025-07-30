@@ -24,18 +24,17 @@ export default class EventsController {
     Add event to the database
   */
   public async store({ request, response, user }: HttpContext) {
-    const { name, date, time, location, maxCount } = request.body()
+    const { name, date, time, location, maxGuest } = request.body()
 
     const event = await Event.create({
       name,
       date,
       time,
       location,
-      maxCount,
+      maxGuest,
       username: user.username,
     })
 
-    /* */
     return response.json(event)
   }
 
@@ -44,12 +43,12 @@ export default class EventsController {
   */
   public async show({ request, response, user }: HttpContext) {
     const { id } = request.params()
-    const event = await Event.find({
-      where: {
+    const event = await Event.query()
+      .where({
         id,
         username: user.username,
-      },
-    })
+      })
+      .first()
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
@@ -62,14 +61,14 @@ export default class EventsController {
     Edit an event in the database
   */
   public async update({ request, response, user }: HttpContext) {
-    const { name, date, time, location, maxCount } = request.body()
+    const { name, date, time, location, maxGuest } = request.body()
     const { id } = request.params()
-    const event = await Event.find({
-      where: {
+    const event = await Event.query()
+      .where({
         id,
         username: user.username,
-      },
-    })
+      })
+      .first()
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
@@ -79,7 +78,7 @@ export default class EventsController {
     event.date = date
     event.time = time
     event.location = location
-    event.maxCount = maxCount
+    event.maxGuest = maxGuest
     await event.save()
     return response.json(event)
   }
@@ -89,12 +88,12 @@ export default class EventsController {
   */
   public async destroy({ request, response, user }: HttpContext) {
     const { id } = request.params()
-    const event = await Event.find({
-      where: {
+    const event = await Event.query()
+      .where({
         id,
         username: user.username,
-      },
-    })
+      })
+      .first()
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
@@ -107,20 +106,24 @@ export default class EventsController {
   /*
     Increase the count of an event
   */
-  public async increaseMaxCount({ request, response, user }: HttpContext) {
+  public async increaseGuestCount({ request, response, user }: HttpContext) {
     const { id } = request.params()
-    const event = await Event.find({
-      where: {
+    const event = await Event.query()
+      .where({
         id,
         username: user.username,
-      },
-    })
+      })
+      .first()
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
     }
 
-    event.maxCount++
+    if (event.guestCount >= event.maxGuest) {
+      return response.status(400).json({ error: 'Event is full' })
+    }
+
+    event.guestCount++
     await event.save()
     return event
   }
