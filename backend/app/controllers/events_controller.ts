@@ -15,21 +15,16 @@ export default class EventsController {
   /*
     Get all events for a user from the database
   */
-  public async userEvents({ request, response }: HttpContext) {
-    const { username } = request.body()
-    const events = await Event.query().where('username', username)
+  public async userEvents({ response, user }: HttpContext) {
+    const events = await Event.query().where('username', user.username)
     return response.json(events)
   }
 
   /*
     Add event to the database
   */
-  public async store({ request, response }: HttpContext) {
-    const { name, date, time, location, maxCount, username } = request.body()
-
-    if (!username) {
-      return response.status(401).json({ error: 'Unauthorized' })
-    }
+  public async store({ request, response, user }: HttpContext) {
+    const { name, date, time, location, maxCount } = request.body()
 
     const event = await Event.create({
       name,
@@ -37,7 +32,7 @@ export default class EventsController {
       time,
       location,
       maxCount,
-      username,
+      username: user.username,
     })
 
     /* */
@@ -47,9 +42,14 @@ export default class EventsController {
   /*
     Get an event by id
   */
-  public async show({ request, response }: HttpContext) {
+  public async show({ request, response, user }: HttpContext) {
     const { id } = request.params()
-    const event = await Event.find(id)
+    const event = await Event.find({
+      where: {
+        id,
+        username: user.username,
+      },
+    })
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
@@ -61,17 +61,18 @@ export default class EventsController {
   /*
     Edit an event in the database
   */
-  public async update({ request, response }: HttpContext) {
-    const { name, date, time, location, maxCount, username } = request.body()
+  public async update({ request, response, user }: HttpContext) {
+    const { name, date, time, location, maxCount } = request.body()
     const { id } = request.params()
-    const event = await Event.find(id)
+    const event = await Event.find({
+      where: {
+        id,
+        username: user.username,
+      },
+    })
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
-    }
-
-    if (username && event.username != username) {
-      return response.status(401).json({ error: 'Unauthorized' })
     }
 
     event.name = name
@@ -86,16 +87,17 @@ export default class EventsController {
   /*
     Delete an event from the database
   */
-  public async destroy({ request, response }: HttpContext) {
-    const { id, username } = request.body()
-    const event = await Event.find(id)
+  public async destroy({ request, response, user }: HttpContext) {
+    const { id } = request.params()
+    const event = await Event.find({
+      where: {
+        id,
+        username: user.username,
+      },
+    })
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
-    }
-
-    if (username && event.username != username) {
-      return response.status(401).json({ error: 'Unauthorized' })
     }
 
     await event.delete()
@@ -105,16 +107,17 @@ export default class EventsController {
   /*
     Increase the count of an event
   */
-  public async increaseMaxCount({ request, response }: HttpContext) {
-    const { id, username } = request.body()
-    const event = await Event.find(id)
+  public async increaseMaxCount({ request, response, user }: HttpContext) {
+    const { id } = request.params()
+    const event = await Event.find({
+      where: {
+        id,
+        username: user.username,
+      },
+    })
 
     if (!event) {
       return response.status(404).json({ error: 'Event not found' })
-    }
-
-    if (username && event.username != username) {
-      return response.status(401).json({ error: 'Unauthorized' })
     }
 
     event.maxCount++
