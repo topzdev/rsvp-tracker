@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import loggerConfig from '#config/logger'
 const EventsController = () => import('#controllers/events_controller')
 
 // Events routes

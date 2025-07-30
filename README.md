@@ -11,7 +11,8 @@
 - time
 - location
 - description
-- max_count
+- max_guest
+- guest_count
 - username
 
 ###API Breakdown
