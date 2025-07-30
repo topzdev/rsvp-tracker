@@ -1,6 +1,10 @@
-Model
+---
 
-Event Table
+#PLAN
+
+##Model
+
+###Event Table
 
 - name
 - date
@@ -10,9 +14,10 @@ Event Table
 - max_count
 - username
 
-API Breakdown
+###API Breakdown
 
 - [POST] add event (auth)
+- [GET] get event by id
 - [PUT] edit event (auth)
 - [DELETE] delete event (auth)
 - [GET] get user events(auth)
