@@ -15,48 +15,52 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthContext } from "@/contexts/AuthContext";
+import useApi from "@/hooks/useApi";
 
 interface EventFormProps {
   id: string;
 }
 
-type EventForm = Omit<Event, "createdAt" | "updatedAt">;
+type EventForm = Omit<Event, "createdAt" | "updatedAt" | "username">;
 
 export default function EventForm({ id }: EventFormProps) {
   const { username } = useAuthContext();
+  const { getEventById, createEvent, updateEvent } = useApi();
   const router = useRouter();
   const isNew = id === "new";
 
   const [event, setEvent] = useState<EventForm>({
-    id: dummyEvents.length + 1,
+    id: 0,
     name: "",
     date: "",
     time: "",
     location: "",
     maxGuest: 1,
     guestCount: 0,
-    username: username,
   });
+
+  async function fetchEvent() {
+    const existingEvent = await getEventById(id);
+    if (existingEvent) {
+      setEvent(existingEvent);
+    } else {
+      router.push("/dashboard");
+    }
+  }
 
   useEffect(() => {
     if (!isNew) {
-      //TODO: Replace this with API call to get event by id
-      const existingEvent = dummyEvents.find((e) => e.id === parseInt(id));
-      if (existingEvent) {
-        setEvent(existingEvent);
-      } else {
-        router.push("/dashboard");
-      }
+      fetchEvent();
     }
-  }, [isNew, id, router]);
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     //TODO: Create or update event to backend
     e.preventDefault();
     if (isNew) {
-      alert("Event created successfully!");
+      await createEvent(event);
     } else {
-      alert("Event updated successfully!");
+      await updateEvent(event);
     }
     router.push("/dashboard");
   };

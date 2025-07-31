@@ -6,11 +6,28 @@ import { dummyEvents } from "@/data/events";
 import EventCard from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/contexts/AuthContext";
+import useApi from "@/hooks/useApi";
+import { useEffect, useState } from "react";
+import { Event } from "@/types/event";
 
 export default function DashboardPage() {
+  const [userEvents, setUserEvents] = useState<Event[]>([]);
   const { username } = useAuthContext();
+  const { getUserEvents, deleteEvent } = useApi();
 
-  const userEvents = dummyEvents.filter((event) => event.username === username);
+  const fetchEvents = async () => {
+    const events = await getUserEvents();
+    setUserEvents(events);
+  };
+
+  const handleDelete = async (id: number) => {
+    await deleteEvent(id);
+    fetchEvents();
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -27,7 +44,7 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold mb-6">My Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {userEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} onDelete={handleDelete} />
             ))}
           </div>
         </div>

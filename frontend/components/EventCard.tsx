@@ -10,18 +10,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import useApi from "@/hooks/useApi";
+import { useRouter } from "next/navigation";
 
 interface EventCardProps {
   event: Event;
   isPublic?: boolean;
+  onDelete?: (id: number) => void;
 }
 
-export default function EventCard({ event, isPublic = false }: EventCardProps) {
-  const handleDelete = (id: number) => {
-    //TODO: Delete event from backend
-    alert("Event deleted");
-  };
-
+export default function EventCard({
+  event,
+  isPublic = false,
+  onDelete,
+}: EventCardProps) {
   const handleRSVP = (id: number) => {
     //TODO: RSVP to event
     alert("RSVP successful");
@@ -70,10 +72,7 @@ export default function EventCard({ event, isPublic = false }: EventCardProps) {
             <Button variant="outline" asChild>
               <Link href={`/events/${event.id}`}>Edit</Link>
             </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleDelete(event.id)}
-            >
+            <Button variant="destructive" onClick={() => onDelete?.(event.id)}>
               Delete
             </Button>
           </>
