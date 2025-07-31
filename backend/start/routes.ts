@@ -23,7 +23,7 @@ router
         router.post('', [EventsController, 'store'])
         router.put(':id', [EventsController, 'update'])
         router.delete(':id', [EventsController, 'destroy'])
-        router.put(':id/increase', [EventsController, 'increaseGuestCount'])
+        router.put(':id/rsvp', [EventsController, 'rsvp'])
       })
       .prefix('events')
       .use(middleware.auth())

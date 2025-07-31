@@ -24,7 +24,7 @@ export default class EventsController {
     Add event to the database
   */
   public async store({ request, response, user }: HttpContext) {
-    const { name, date, time, location, maxGuest } = request.body()
+    const { name, date, time, location, maxGuest, description } = request.body()
 
     const event = await Event.create({
       name,
@@ -33,6 +33,7 @@ export default class EventsController {
       location,
       maxGuest,
       username: user.username,
+      description,
     })
 
     return response.json(event)
@@ -61,7 +62,7 @@ export default class EventsController {
     Edit an event in the database
   */
   public async update({ request, response, user }: HttpContext) {
-    const { name, date, time, location, maxGuest } = request.body()
+    const { name, date, time, location, maxGuest, description } = request.body()
     const { id } = request.params()
     const event = await Event.query()
       .where({
@@ -79,6 +80,7 @@ export default class EventsController {
     event.time = time
     event.location = location
     event.maxGuest = maxGuest
+    event.description = description
     await event.save()
     return response.json(event)
   }
@@ -104,14 +106,13 @@ export default class EventsController {
   }
 
   /*
-    Increase the count of an event
+    Increase the guest count of an event
   */
-  public async increaseGuestCount({ request, response, user }: HttpContext) {
+  public async rsvp({ request, response, user }: HttpContext) {
     const { id } = request.params()
     const event = await Event.query()
       .where({
         id,
-        username: user.username,
       })
       .first()
 
