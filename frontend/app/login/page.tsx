@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthContext } from "@/contexts/AuthContext";
+import Link from "next/dist/client/link";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -25,7 +26,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex-col flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">Event Planner</CardTitle>
@@ -51,6 +52,12 @@ export default function LoginPage() {
           </CardFooter>
         </form>
       </Card>
+
+      <div className="mt-8 text-center">
+        <Button variant="link" asChild>
+          <Link href="/">View Public Events</Link>
+        </Button>
+      </div>
     </div>
   );
 }

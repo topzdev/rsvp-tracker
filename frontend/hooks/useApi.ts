@@ -58,11 +58,12 @@ const useApi = () => {
     });
   };
 
-  const increaseGuestCount = async (id: string): Promise<void> => {
-    await fetch(`${baseUrl}/events/${id}/increase-guest-count`, {
-      method: "POST",
+  const rsvp = async (id: number): Promise<Event> => {
+    const response = await fetch(`${baseUrl}/events/${id}/rsvp`, {
+      method: "PUT",
       ...authHeader,
     });
+    return response.json();
   };
 
   return {
@@ -72,7 +73,7 @@ const useApi = () => {
     createEvent,
     updateEvent,
     deleteEvent,
-    increaseGuestCount,
+    rsvp,
   };
 };
 

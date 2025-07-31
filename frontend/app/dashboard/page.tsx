@@ -20,11 +20,6 @@ export default function DashboardPage() {
     setUserEvents(events);
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteEvent(id);
-    fetchEvents();
-  };
-
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -52,7 +47,7 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold mb-6">My Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {userEvents.map((event) => (
-              <EventCard key={event.id} event={event} onDelete={handleDelete} />
+              <EventCard key={event.id} event={event} onDelete={fetchEvents} />
             ))}
           </div>
         </div>
