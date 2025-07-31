@@ -14,15 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 interface EventFormProps {
   id: string;
-  username: string;
 }
 
 type EventForm = Omit<Event, "createdAt" | "updatedAt">;
 
-export default function EventForm({ id, username }: EventFormProps) {
+export default function EventForm({ id }: EventFormProps) {
+  const { username } = useAuthContext();
   const router = useRouter();
   const isNew = id === "new";
 

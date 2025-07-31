@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,16 +11,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
-  const router = useRouter();
+  const { login } = useAuthContext();
 
   const handleSubmit = (e: React.FormEvent) => {
-    //TODO: Persist username to local storage
     e.preventDefault();
     if (username.trim()) {
-      router.push("/dashboard");
+      login(username.trim());
     }
   };
 

@@ -5,10 +5,11 @@ import Link from "next/link";
 import { dummyEvents } from "@/data/events";
 import EventCard from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const username = "john_doe";
+  const { username } = useAuthContext();
+
   const userEvents = dummyEvents.filter((event) => event.username === username);
 
   return (
