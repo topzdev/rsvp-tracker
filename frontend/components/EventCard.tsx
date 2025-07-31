@@ -47,8 +47,8 @@ export default function EventCard({
           </div>
           {isPublic && (
             <div className="text-sm">
-              <span className="font-medium">Description:</span> Join us for this
-              amazing event!
+              <span className="font-medium">Description:</span>{" "}
+              {event.description}
             </div>
           )}
           <div className="text-sm">

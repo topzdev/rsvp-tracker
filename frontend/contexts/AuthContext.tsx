@@ -20,6 +20,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const enhancedLogin = (username: string) => {
+    auth.login(username);
+    router.push("/dashboard");
+  };
+
+  const enhancedLogout = () => {
+    auth.logout();
+    router.push("/login");
+  };
+
   useEffect(() => {
     if (!auth.isLoggedIn && !publicPaths.includes(pathname)) {
       router.push("/login");
@@ -33,7 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return null;
   }
 
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  const contextValue = {
+    username: auth.username,
+    isLoggedIn: auth.isLoggedIn,
+    login: enhancedLogin,
+    logout: enhancedLogout,
+  };
+
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 }
 
 export function useAuthContext() {

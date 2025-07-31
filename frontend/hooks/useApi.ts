@@ -14,7 +14,7 @@ const useApi = () => {
   const authHeader = {
     headers: {
       "Content-Type": "application/json",
-      ...(username && { Authorization: `Bearer ${username}` }),
+      ...(username && { Authorization: `${username}` }),
     },
   };
 

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { useAuthContext } from "@/contexts/AuthContext";
 import useApi from "@/hooks/useApi";
+import { Textarea } from "./ui/textarea";
 
 interface EventFormProps {
   id: string;
@@ -35,6 +36,7 @@ export default function EventForm({ id }: EventFormProps) {
     date: "",
     time: "",
     location: "",
+    description: "",
     maxGuest: 1,
     guestCount: 0,
   });
@@ -65,6 +67,12 @@ export default function EventForm({ id }: EventFormProps) {
     router.push("/dashboard");
   };
 
+  const handleChanges = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setEvent({ ...event, [e.target.name]: e.target.value });
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -79,8 +87,9 @@ export default function EventForm({ id }: EventFormProps) {
             <Label htmlFor="name">Event Name</Label>
             <Input
               id="name"
+              name="name"
               value={event.name}
-              onChange={(e) => setEvent({ ...event, name: e.target.value })}
+              onChange={handleChanges}
               required
             />
           </div>
@@ -91,8 +100,9 @@ export default function EventForm({ id }: EventFormProps) {
               <Input
                 type="date"
                 id="date"
+                name="date"
                 value={event.date}
-                onChange={(e) => setEvent({ ...event, date: e.target.value })}
+                onChange={handleChanges}
                 required
               />
             </div>
@@ -102,8 +112,9 @@ export default function EventForm({ id }: EventFormProps) {
               <Input
                 type="time"
                 id="time"
+                name="time"
                 value={event.time}
-                onChange={(e) => setEvent({ ...event, time: e.target.value })}
+                onChange={handleChanges}
                 required
               />
             </div>
@@ -113,8 +124,20 @@ export default function EventForm({ id }: EventFormProps) {
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
+              name="location"
               value={event.location}
-              onChange={(e) => setEvent({ ...event, location: e.target.value })}
+              onChange={handleChanges}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              value={event.description}
+              onChange={handleChanges}
               required
             />
           </div>
@@ -124,10 +147,9 @@ export default function EventForm({ id }: EventFormProps) {
             <Input
               type="number"
               id="maxGuest"
+              name="maxGuest"
               value={event.maxGuest}
-              onChange={(e) =>
-                setEvent({ ...event, maxGuest: parseInt(e.target.value) })
-              }
+              onChange={handleChanges}
               min="1"
               required
             />

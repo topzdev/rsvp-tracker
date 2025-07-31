@@ -12,7 +12,7 @@ import { Event } from "@/types/event";
 
 export default function DashboardPage() {
   const [userEvents, setUserEvents] = useState<Event[]>([]);
-  const { username } = useAuthContext();
+  const { username, logout, isLoggedIn } = useAuthContext();
   const { getUserEvents, deleteEvent } = useApi();
 
   const fetchEvents = async () => {
@@ -34,7 +34,15 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">Event Planner</h1>
-          <p className="mt-2 text-muted-foreground">Logged in as: {username}</p>
+          <div className="flex justify-center items-center gap-4 mt-4">
+            <p className="text-muted-foreground">Logged in as: {username}</p>
+
+            {isLoggedIn && (
+              <Button variant="secondary" onClick={logout}>
+                Log Out
+              </Button>
+            )}
+          </div>
           <Button asChild className="mt-4">
             <Link href="/events/new">Create New Event</Link>
           </Button>

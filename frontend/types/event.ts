@@ -7,6 +7,7 @@ export interface Event {
   maxGuest: number;
   guestCount: number;
   username: string;
+  description: string;
   createdAt: string;
   updatedAt: string;
 }
